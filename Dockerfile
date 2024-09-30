@@ -13,5 +13,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 # 소스 코드 복사
 COPY *.py .
 
+RUN python train.py
+
 # FASTAPI 서버 실행
 CMD ["uvicorn", "inference:app", "--host", "0.0.0.0"]
