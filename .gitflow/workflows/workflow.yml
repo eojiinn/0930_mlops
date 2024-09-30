@@ -31,6 +31,4 @@ jobs:
       #     docker-compose up -d --build
       #     EOF
 
-      - name: deploy
-        run: |
           
