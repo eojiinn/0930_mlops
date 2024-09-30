@@ -17,16 +17,20 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.EC2_SSH_KEY }} # GitHub Secrets에 저장한 SSH 키
 
-      # 3. EC2 서버로 코드 복사
-      - name: Copy files to EC2
-        run: |
-          scp -o StrictHostKeyChecking=no -r . ubuntu@${{ secrets.EC2_IP }}:/home/ubuntu/app
+      # # 3. EC2 서버로 코드 복사
+      # - name: Copy files to EC2
+      #   run: |
+      #     scp -o StrictHostKeyChecking=no -r . ubuntu@${{ secrets.EC2_IP }}:/home/ubuntu/app
 
-      # 4. EC2에서 FastAPI 서버 재시작 (Docker 사용 예시)
-      - name: Restart FastAPI server on EC2
+      # # 4. EC2에서 FastAPI 서버 재시작 (Docker 사용 예시)
+      # - name: Restart FastAPI server on EC2
+      #   run: |
+      #     ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} << 'EOF'
+      #     cd /home/ubuntu/app
+      #     docker-compose down
+      #     docker-compose up -d --build
+      #     EOF
+
+      - name: deploy
         run: |
-          ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} << 'EOF'
-          cd /home/ubuntu/app
-          docker-compose down
-          docker-compose up -d --build
-          EOF
+          
