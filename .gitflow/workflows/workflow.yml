@@ -1,0 +1,35 @@
+name: Deploy to EC2
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    name: EC2 자동 배포
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      # 2. SSH 키를 설정합니다.
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.EC2_SSH_KEY }} # GitHub Secrets에 저장한 SSH 키
+
+      # 3. EC2 서버로 코드 복사
+      - name: Copy files to EC2
+        run: |
+          scp -o StrictHostKeyChecking=no -r . ubuntu@${{ secrets.EC2_IP }}:/home/ubuntu/app
+
+      # 4. EC2에서 FastAPI 서버 재시작 (Docker 사용 예시)
+      - name: Restart FastAPI server on EC2
+        run: |
+          ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} << 'EOF'
+          cd /home/ubuntu/app
+          docker-compose down
+          docker-compose up -d --build
+          EOF
